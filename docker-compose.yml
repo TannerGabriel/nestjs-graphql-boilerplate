@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  nodejs:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: nodejs
+    restart: always
+    environment:
+      - DATABASE_HOST=mongo
+    ports:
+      - '3000:3000'
+    depends_on: [mongo]
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - '27017:27017'
