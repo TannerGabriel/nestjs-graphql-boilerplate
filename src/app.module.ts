@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
+import 'dotenv/config';
 
 @Module({
   imports: [
@@ -11,7 +12,7 @@ import { UserModule } from './user/user.module';
       typePaths: ['./**/*.graphql'],
       context: ({ req }) => ({ headers: req.headers }),
     }),
-    MongooseModule.forRoot('mongodb://localhost/nest'),
+    MongooseModule.forRoot(`mongodb://${process.env.DATABASE_HOST}/nest`),
     UserModule,
   ],
   controllers: [AppController],
