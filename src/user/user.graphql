@@ -1,21 +1,21 @@
 # Add user type
 type User {
   id: ID!
-  username: String!
+  email: String!
 }
 
 type Auth {
-  username: String!
+  email: String!
   token: String!
 }
 
 type Query {
-  users(page: Int): [User!]
-  user(username: String!): User
+  users: [User!]
+  user(email: String!): User
   whoami: User
 }
 
 type Mutation {
-  login(username: String!, password: String!): Auth
-  register(username: String!, password: String!): Auth
+  login(email: String!, password: String!): Auth
+  register(email: String!, password: String!): Auth
 }
