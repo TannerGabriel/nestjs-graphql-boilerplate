@@ -18,14 +18,4 @@ export class UserResolver {
   }
 
   // TODO: Implement who am i
-
-  // TODO: Implement login
-  //   @Mutation()
-  //   async login(
-  //     @Args('email') email: string,
-  //     @Args('password') password: string,
-  //   ) {
-  //     const user: User = { email, password };
-  //     return await this.userService.login(user);
-  //   }
 }

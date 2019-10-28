@@ -2,6 +2,8 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../types/user';
+import { UserDTO } from './dto/user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -26,6 +28,20 @@ export class UserService {
 
     const createdUser = new this.userModel(userDTO);
     return await createdUser.save();
+  }
+
+  async findByLogin(userDTO: UserDTO) {
+    const { email, password } = userDTO;
+    const user = await this.userModel.findOne({ email });
+    if (!user) {
+      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+    }
+
+    if (await bcrypt.compare(password, user.password)) {
+      return user;
+    } else {
+      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+    }
   }
 
   async findByPayload(payload: any) {

@@ -25,4 +25,19 @@ export class AuthResolver {
     const token = await this.authService.signPayload(payload);
     return { email: response.email, token };
   }
+
+  @Mutation()
+  async login(
+    @Args('email') email: string,
+    @Args('password') password: string,
+  ) {
+    const user: User = { email, password };
+    const response: User = await this.userService.findByLogin(user);
+    const payload: Payload = {
+      email: response.email,
+    };
+
+    const token = await this.authService.signPayload(payload);
+    return { email: response.email, token };
+  }
 }
