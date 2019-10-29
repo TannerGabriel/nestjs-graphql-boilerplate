@@ -4,6 +4,11 @@ type User {
   email: String!
 }
 
+input UpdateUser {
+  email: String
+  password: String
+}
+
 type Auth {
   email: String!
   token: String!
@@ -18,4 +23,5 @@ type Query {
 type Mutation {
   login(email: String!, password: String!): Auth
   register(email: String!, password: String!): Auth
+  update(id: String!, user: UpdateUser!): User
 }

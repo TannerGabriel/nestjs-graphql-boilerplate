@@ -20,3 +20,20 @@ UserSchema.pre('save', async function(next: mongoose.HookNextFunction) {
     return next(err);
   }
 });
+
+UserSchema.pre('findOneAndUpdate', async function(
+  next: mongoose.HookNextFunction,
+) {
+  const updateFields = this.getUpdate();
+  const password = updateFields.password;
+  try {
+    const rounds = bcrypt.getRounds(password);
+    if (rounds === 0) {
+      updateFields.password = await bcrypt.hash(password, 10);
+    }
+    return next();
+  } catch (error) {
+    updateFields.password = await bcrypt.hash(password, 10);
+    return next();
+  }
+});

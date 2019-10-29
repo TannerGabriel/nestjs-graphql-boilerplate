@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { User } from '../types/user';
 import { UserDTO } from './dto/user.dto';
 import * as bcrypt from 'bcrypt';
+import { UpdateUserDTO } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -42,6 +43,40 @@ export class UserService {
     } else {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
+  }
+
+  async update(id: string, newUser: UpdateUserDTO) {
+    const user: User = await this.userModel.findOne({ _id: id });
+    const userWithEmail = await this.userModel.findOne({
+      email: newUser.email,
+    });
+
+    if (user === undefined || user === null) {
+      throw new HttpException(`User doesn't exists`, HttpStatus.BAD_REQUEST);
+    } else if (
+      userWithEmail !== null &&
+      userWithEmail !== undefined &&
+      newUser.email !== user.email
+    ) {
+      throw new HttpException('Email is already used', HttpStatus.BAD_REQUEST);
+    }
+
+    const updateUser: UserDTO = {
+      email: newUser.email || user.email,
+      password: newUser.password || user.password,
+    };
+
+    const updatedUser = await this.userModel.findOneAndUpdate(
+      { _id: id },
+      {
+        ...updateUser,
+      },
+      {
+        new: true,
+      },
+    );
+
+    return updatedUser;
   }
 
   async findByPayload(payload: any) {
