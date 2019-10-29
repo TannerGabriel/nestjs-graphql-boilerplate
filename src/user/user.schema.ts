@@ -11,10 +11,9 @@ UserSchema.pre('save', async function(next: mongoose.HookNextFunction) {
     if (!this.isModified('password')) {
       return next();
     }
-    // tslint:disable-next-line: no-string-literal
-    const hashed = await bcrypt.hash(this['password'], 10);
-    // tslint:disable-next-line: no-string-literal
-    this['password'] = hashed;
+
+    const hashed = await bcrypt.hash(this.password, 10);
+    this.password = hashed;
     return next();
   } catch (err) {
     return next(err);
