@@ -1,15 +1,49 @@
-version: 2 # CircleCI version
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
 jobs:
   build:
-    machine: true # Use a Linux VM instead of docker environment
-    working_directory: ~/repo # Default working directory, where your project will be cloned
-  steps:
-    - checkout
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:12
+        environment:
+          DATABASE_HOST: mongo
 
-    - run: docker-compose build
-    - run: docker-compose up -d
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      - image: mongo:4.2.0
 
-    # run tests!
-    # - run: yarn test
-    # run e2e tests
-    - run: docker-compose exec nodejs npm run test:e2e
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.3.0
+      - run:
+          name: Wait for Mongo to start
+          # preinstalled in circleci/* docker image
+          command: dockerize -wait tcp://127.0.0.1:27017 -timeout 120s
+      # run tests!
+      # - run: yarn test
+      # run e2e tests
+      - run: yarn test:e2e

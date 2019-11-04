@@ -5,7 +5,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { GraphQLModule } from '@nestjs/graphql';
 import { UserDTO } from '../src/user/dto/user.dto';
 import { AuthModule } from '../src/auth/auth.module';
-import * as mongoose from 'mongoose';
 
 describe('ItemsController (e2e)', () => {
   let app;
@@ -16,7 +15,8 @@ describe('ItemsController (e2e)', () => {
         UserModule,
         AuthModule,
         MongooseModule.forRoot(
-          `mongodb://${process.env.DATABASE_HOST}/nestgraphqltesting`,
+          `mongodb://${process.env.DATABASE_HOST ||
+            'localhost:27017'}/nestgraphqltesting`,
         ),
         GraphQLModule.forRoot({
           typePaths: ['./**/*.graphql'],
