@@ -9,12 +9,10 @@ jobs:
       # specify the version you desire here
       - image: circleci/node:12
         environment:
-        DATABASE_HOST: mongo
+          DATABASE_HOST: mongo
         environment:
           - DATABASE_HOST=mongo
           - PORT=3000
-        ports:
-          - '3000:3000'
         depends_on: [mongo]
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
