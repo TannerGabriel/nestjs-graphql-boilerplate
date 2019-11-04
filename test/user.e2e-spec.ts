@@ -67,29 +67,53 @@ describe('ItemsController (e2e)', () => {
       .expect(200);
   });
 
-  // const getUserQuery = `{
-  //   users{
-  //     id,
-  //     email
-  //   }
-  // }`;
+  const getUserQuery = `{
+    users{
+      id,
+      email
+    }
+  }`;
 
-  // it('getItems', () => {
-  //   return request(app.getHttpServer())
-  //     .post('/graphql')
-  //     .send({
-  //       operationName: null,
-  //       query: getUserQuery,
-  //     })
-  //     .expect(({ body }) => {
-  //       const data = body.data.users;
-  //       const userResult = data[0];
-  //       expect(data.length).toBeGreaterThan(0);
-  //       expect(userResult.email).toBe(user.email);
-  //       expect(userResult.id).not.toBeNull();
-  //     })
-  //     .expect(200);
-  // });
+  it('getItems', () => {
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        query: getUserQuery,
+      })
+      .expect(({ body }) => {
+        const data = body.data.users;
+        const userResult = data[0];
+        expect(data.length).toBeGreaterThan(0);
+        expect(userResult.email).toBe(user.email);
+        expect(userResult.id).not.toBeNull();
+      })
+      .expect(200);
+  });
+
+  const signInUserQuery = `
+    mutation{
+      login(email: "${user.email}", password: "${user.password}"){
+          email,
+          token
+        }
+      }
+  `;
+
+  it('signIn', () => {
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        query: signInUserQuery,
+      })
+      .expect(({ body }) => {
+        const data = body.data.login;
+        expect(data.email).toBe(user.email);
+        expect(data.token).not.toBeNull();
+      })
+      .expect(200);
+  });
 
   // const updateUserObject = JSON.stringify(updatedUser).replace(
   //   /\"([^(\")"]+)\":/g,
