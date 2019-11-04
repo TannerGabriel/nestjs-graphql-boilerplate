@@ -15,7 +15,9 @@ describe('ItemsController (e2e)', () => {
       imports: [
         UserModule,
         AuthModule,
-        MongooseModule.forRoot('mongodb://localhost/nestgraphqltesting'),
+        MongooseModule.forRoot(
+          `mongodb://${process.env.DATABASE_HOST}/nestgraphqltesting`,
+        ),
         GraphQLModule.forRoot({
           typePaths: ['./**/*.graphql'],
           context: ({ req }) => ({ headers: req.headers }),
