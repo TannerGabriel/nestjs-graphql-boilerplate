@@ -5,19 +5,19 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { GraphQLModule } from '@nestjs/graphql';
 import { UserDTO } from '../src/user/dto/user.dto';
 import { AuthModule } from '../src/auth/auth.module';
+import { Logger } from '@nestjs/common';
 
 describe('ItemsController (e2e)', () => {
   let app;
+  const host = process.env.DATABASE_HOST || 'localhost';
 
   beforeAll(async () => {
+    Logger.log('HOST: ' + host, 'BeforeAll');
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         UserModule,
         AuthModule,
-        MongooseModule.forRoot(
-          `mongodb://${process.env.DATABASE_HOST ||
-            'localhost:27017'}/nestgraphqltesting`,
-        ),
+        MongooseModule.forRoot(`mongodb://${host}/nestgraphqltesting`),
         GraphQLModule.forRoot({
           typePaths: ['./**/*.graphql'],
           context: ({ req }) => ({ headers: req.headers }),
