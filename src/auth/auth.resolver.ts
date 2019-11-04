@@ -46,4 +46,10 @@ export class AuthResolver {
   async update(@Args('id') id: string, @Args('user') user: UpdateUserDTO) {
     return await this.userService.update(id, user);
   }
+
+  // TODO: Add security for delete
+  @Mutation()
+  async delete(@Args('email') email: string) {
+    return await this.userService.deleteUserByEmail(email);
+  }
 }

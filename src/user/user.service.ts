@@ -83,4 +83,24 @@ export class UserService {
     const { email } = payload;
     return await this.userModel.findOne({ email });
   }
+
+  async deleteUserById(id: string) {
+    const user = await this.userModel.findOne({ _id: id });
+
+    if (user === undefined || user === null) {
+      throw new HttpException(`User doesn't exists`, HttpStatus.BAD_REQUEST);
+    }
+
+    return await this.userModel.findByIdAndRemove(id);
+  }
+
+  async deleteUserByEmail(email: string) {
+    const user = await this.userModel.findOne({ email });
+
+    if (user === undefined || user === null) {
+      throw new HttpException(`User doesn't exists`, HttpStatus.BAD_REQUEST);
+    }
+
+    return await this.userModel.findOneAndDelete({ email });
+  }
 }

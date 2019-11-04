@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { GraphQLModule } from '@nestjs/graphql';
 import { UserDTO } from '../src/user/dto/user.dto';
 import { AuthModule } from '../src/auth/auth.module';
+import * as mongoose from 'mongoose';
 
 describe('ItemsController (e2e)', () => {
   let app;
@@ -28,6 +29,7 @@ describe('ItemsController (e2e)', () => {
   });
 
   afterAll(async () => {
+    mongoose.connection.db.dropDatabase();
     await app.close();
   });
 
@@ -35,8 +37,6 @@ describe('ItemsController (e2e)', () => {
     email: 'test@test.com',
     password: '!somepassword123!',
   };
-
-  let id: string = '';
 
   const updatedUser: UserDTO = {
     email: 'deom@test.com',
@@ -61,7 +61,6 @@ describe('ItemsController (e2e)', () => {
       })
       .expect(({ body }) => {
         const data = body.data.register;
-        id = data.id;
         expect(data.email).toBe(user.email);
         expect(data.token).not.toBeNull();
       })
@@ -119,4 +118,28 @@ describe('ItemsController (e2e)', () => {
   //     })
   //     .expect(200);
   // });
+
+  const deleteUserQuery = `
+      mutation{
+        delete(email: "${user.email}"){
+          email,
+          id
+        }
+      }
+  `;
+
+  it('delete item', () => {
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        query: deleteUserQuery,
+      })
+      .expect(({ body }) => {
+        const data = body.data.delete;
+        expect(data.email).toBe(user.email);
+        expect(data.token).not.toBeNull();
+      })
+      .expect(200);
+  });
 });

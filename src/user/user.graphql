@@ -24,4 +24,5 @@ type Mutation {
   login(email: String!, password: String!): Auth
   register(email: String!, password: String!): Auth
   update(id: String!, user: UpdateUser!): User
+  delete(email: String!): User
 }
