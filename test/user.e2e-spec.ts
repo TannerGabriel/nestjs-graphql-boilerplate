@@ -31,7 +31,6 @@ describe('ItemsController (e2e)', () => {
   });
 
   afterAll(async () => {
-    mongoose.connection.db.dropDatabase();
     await app.close();
   });
 
