@@ -3,7 +3,6 @@ import { AuthService } from './auth.service';
 import { User } from '../types/user';
 import { UserService } from '../user/user.service';
 import { Payload } from '../types/payload';
-import { UpdateUserDTO } from '../user/dto/update-user.dto';
 
 @Resolver('Auth')
 export class AuthResolver {
@@ -40,16 +39,5 @@ export class AuthResolver {
 
     const token = await this.authService.signPayload(payload);
     return { email: response.email, token };
-  }
-
-  @Mutation()
-  async update(@Args('id') id: string, @Args('user') user: UpdateUserDTO) {
-    return await this.userService.update(id, user);
-  }
-
-  // TODO: Add security for delete
-  @Mutation()
-  async delete(@Args('email') email: string) {
-    return await this.userService.deleteUserByEmail(email);
   }
 }

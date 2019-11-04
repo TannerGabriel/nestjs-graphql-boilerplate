@@ -5,14 +5,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { GraphQLModule } from '@nestjs/graphql';
 import { UserDTO } from '../src/user/dto/user.dto';
 import { AuthModule } from '../src/auth/auth.module';
-import { Logger } from '@nestjs/common';
+import { AppModule } from '../src/app.module';
 
-describe('ItemsController (e2e)', () => {
+describe('Users (e2e)', () => {
   let app;
   const host = process.env.DATABASE_HOST || 'localhost';
 
   beforeAll(async () => {
-    Logger.log('HOST: ' + host, 'BeforeAll');
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         UserModule,
@@ -20,7 +19,7 @@ describe('ItemsController (e2e)', () => {
         MongooseModule.forRoot(`mongodb://${host}/nestgraphqltesting`),
         GraphQLModule.forRoot({
           typePaths: ['./**/*.graphql'],
-          context: ({ req }) => ({ headers: req.headers }),
+          context: ({ req }) => ({ req }),
           playground: true,
         }),
       ],
@@ -39,11 +38,6 @@ describe('ItemsController (e2e)', () => {
     password: '!somepassword123!',
   };
 
-  const updatedUser: UserDTO = {
-    email: 'deom@test.com',
-    password: '!somenewgreatpassword123!',
-  };
-
   const createUserQuery = `
     mutation{
         register(email: "${user.email}", password: "${user.password}"){
@@ -53,7 +47,9 @@ describe('ItemsController (e2e)', () => {
       }
   `;
 
-  it('createItem', () => {
+  let token: string;
+  let result;
+  it('register', () => {
     return request(app.getHttpServer())
       .post('/graphql')
       .send({
@@ -64,6 +60,8 @@ describe('ItemsController (e2e)', () => {
         const data = body.data.register;
         expect(data.email).toBe(user.email);
         expect(data.token).not.toBeNull();
+        result = data;
+        token = data.token;
       })
       .expect(200);
   });
@@ -116,35 +114,8 @@ describe('ItemsController (e2e)', () => {
       .expect(200);
   });
 
-  // const updateUserObject = JSON.stringify(updatedUser).replace(
-  //   /\"([^(\")"]+)\":/g,
-  //   '$1:',
-  // );
-
-  // it('updateItem', () => {
-  //   const updateUserQuery = `
-  //   mutation{
-  //       update(id: ${id}, user: ${updateUserObject}){
-  //         email,
-  //         id
-  //       }
-  //     }`;
-
-  //   return request(app.getHttpServer())
-  //     .post('/graphql')
-  //     .send({
-  //       operationName: null,
-  //       query: updateUserQuery,
-  //     })
-  //     .expect(({ body }) => {
-  //       const data = body.data.update;
-  //       expect(data.id).not.toBeNull();
-  //       expect(data.email).toBe(updatedUser.email);
-  //     })
-  //     .expect(200);
-  // });
-
-  const deleteUserQuery = `
+  it('delete item', () => {
+    const deleteUserQuery = `
       mutation{
         delete(email: "${user.email}"){
           email,
@@ -153,9 +124,10 @@ describe('ItemsController (e2e)', () => {
       }
   `;
 
-  it('delete item', () => {
     return request(app.getHttpServer())
       .post('/graphql')
+      .set('Accept', 'application/json')
+      .set('Authorization', `Bearer ${result.token}`)
       .send({
         operationName: null,
         query: deleteUserQuery,

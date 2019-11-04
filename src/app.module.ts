@@ -9,7 +9,7 @@ import 'dotenv/config';
   imports: [
     GraphQLModule.forRoot({
       typePaths: ['./**/*.graphql'],
-      context: ({ req }) => ({ headers: req.headers }),
+      context: ({ req }) => ({ req }),
       playground: true,
     }),
     MongooseModule.forRoot(`mongodb://${process.env.DATABASE_HOST}/nest`),
