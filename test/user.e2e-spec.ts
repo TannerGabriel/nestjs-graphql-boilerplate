@@ -5,7 +5,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { GraphQLModule } from '@nestjs/graphql';
 import { UserDTO } from '../src/user/dto/user.dto';
 import { AuthModule } from '../src/auth/auth.module';
-import { AppModule } from '../src/app.module';
 
 describe('Users (e2e)', () => {
   let app;
