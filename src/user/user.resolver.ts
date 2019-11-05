@@ -33,7 +33,15 @@ export class UserResolver {
   }
 
   @Mutation()
-  async update(@Args('id') id: string, @Args('user') user: UpdateUserDTO) {
-    return await this.userService.update(id, user);
+  async update(
+    @Args('id') id: string,
+    @Args('user') user: UpdateUserDTO,
+    @CurrentUser() currentUser: User,
+  ) {
+    if (id === currentUser.id) {
+      return await this.userService.update(id, user);
+    } else {
+      throw new UnauthorizedException();
+    }
   }
 }
