@@ -4,8 +4,8 @@ import { UpdateUserDTO } from './dto/update-user.dto';
 import { UseGuards } from '@nestjs/common';
 import { GraphqlAuthGuard } from '../guards/gql-auth.guard';
 
+@UseGuards(GraphqlAuthGuard)
 @Resolver()
-// @UseGuards(GqlAuthGuard)
 export class UserResolver {
   constructor(private userService: UserService) {}
 
@@ -21,7 +21,6 @@ export class UserResolver {
 
   // TODO: Implement who am i
 
-  @UseGuards(GraphqlAuthGuard)
   @Mutation()
   async delete(@Args('email') email: string) {
     return await this.userService.deleteUserByEmail(email);

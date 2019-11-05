@@ -76,6 +76,8 @@ describe('Users (e2e)', () => {
   it('getItems', () => {
     return request(app.getHttpServer())
       .post('/graphql')
+      .set('Accept', 'application/json')
+      .set('Authorization', `Bearer ${result.token}`)
       .send({
         operationName: null,
         query: getUserQuery,
