@@ -6,6 +6,8 @@ import { AuthModule } from './auth/auth.module';
 import 'dotenv/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
+
+const host = process.env.DATABASE_HOST || 'localhost';
 @Module({
   imports: [
     GraphQLModule.forRoot({
@@ -16,7 +18,7 @@ import { LoggingInterceptor } from './interceptors/logging.interceptor';
         requireResolversForResolveType: false,
       },
     }),
-    MongooseModule.forRoot(`mongodb://${process.env.DATABASE_HOST}/nest`),
+    MongooseModule.forRoot(`mongodb://${host}/nest`),
     UserModule,
     AuthModule,
   ],
