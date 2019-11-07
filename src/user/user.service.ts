@@ -2,25 +2,26 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../types/user';
-import { UserDTO } from './dto/user.dto';
+import { CreateUserInput } from './dto/user.input';
 import * as bcrypt from 'bcrypt';
-import { UpdateUserDTO } from './dto/update-user.dto';
+import { UpdateUserInput } from './dto/update-user.input';
+import { UserType } from '../models/user.type';
 
 @Injectable()
 export class UserService {
   constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
 
-  async showAll(): Promise<User[]> {
+  async showAll(): Promise<UserType[]> {
     return await this.userModel.find();
   }
 
-  async getUser(email: string): Promise<User> {
+  async getUser(email: string): Promise<UserType> {
     return await this.userModel.findOne({
       email,
     });
   }
 
-  async create(userDTO: User): Promise<User> {
+  async create(userDTO: User): Promise<UserType> {
     const { email } = userDTO;
     const user = await this.userModel.findOne({ email });
     if (user) {
@@ -31,7 +32,7 @@ export class UserService {
     return await createdUser.save();
   }
 
-  async findByLogin(userDTO: UserDTO) {
+  async findByLogin(userDTO: CreateUserInput) {
     const { email, password } = userDTO;
     const user = await this.userModel.findOne({ email });
     if (!user) {
@@ -45,7 +46,7 @@ export class UserService {
     }
   }
 
-  async update(id: string, newUser: UpdateUserDTO) {
+  async update(id: string, newUser: UpdateUserInput) {
     const user: User = await this.userModel.findOne({ _id: id });
     const userWithEmail = await this.userModel.findOne({
       email: newUser.email,
@@ -61,7 +62,7 @@ export class UserService {
       throw new HttpException('Email is already used', HttpStatus.BAD_REQUEST);
     }
 
-    const updateUser: UserDTO = {
+    const updateUser: CreateUserInput = {
       email: newUser.email || user.email,
       password: newUser.password || user.password,
     };

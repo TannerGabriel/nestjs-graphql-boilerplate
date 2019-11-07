@@ -3,7 +3,7 @@ import * as request from 'supertest';
 import { UserModule } from '../src/user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { GraphQLModule } from '@nestjs/graphql';
-import { UserDTO } from '../src/user/dto/user.dto';
+import { CreateUserInput } from '../src/user/dto/user.input';
 import { AuthModule } from '../src/auth/auth.module';
 
 describe('Users (e2e)', () => {
@@ -32,7 +32,7 @@ describe('Users (e2e)', () => {
     await app.close();
   });
 
-  const user: UserDTO = {
+  const user: CreateUserInput = {
     email: 'test@test.com',
     password: '!somepassword123!',
   };

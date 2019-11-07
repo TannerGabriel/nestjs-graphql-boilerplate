@@ -1,8 +1,9 @@
-import { Resolver, Mutation, Args, Parent } from '@nestjs/graphql';
+import { Resolver, Mutation, Args } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { User } from '../types/user';
 import { UserService } from '../user/user.service';
 import { Payload } from '../types/payload';
+import { AuthType } from '../models/auth.type';
 
 @Resolver('Auth')
 export class AuthResolver {
@@ -11,7 +12,7 @@ export class AuthResolver {
     private userService: UserService,
   ) {}
 
-  @Mutation()
+  @Mutation(returns => AuthType)
   async register(
     @Args('email') email: string,
     @Args('password') password: string,
@@ -26,7 +27,7 @@ export class AuthResolver {
     return { email: response.email, token };
   }
 
-  @Mutation()
+  @Mutation(returns => AuthType)
   async login(
     @Args('email') email: string,
     @Args('password') password: string,

@@ -11,6 +11,9 @@ import 'dotenv/config';
       typePaths: ['./**/*.graphql'],
       context: ({ req }) => ({ req }),
       playground: true,
+      resolverValidationOptions: {
+        requireResolversForResolveType: false,
+      },
     }),
     MongooseModule.forRoot(`mongodb://${process.env.DATABASE_HOST}/nest`),
     UserModule,

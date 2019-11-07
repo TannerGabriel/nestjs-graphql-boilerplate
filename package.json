@@ -28,6 +28,8 @@
     "@nestjs/platform-express": "^6.7.2",
     "apollo-server-express": "^2.9.6",
     "bcrypt": "^3.0.6",
+    "class-transformer": "^0.2.3",
+    "class-validator": "^0.11.0",
     "dotenv": "^8.2.0",
     "graphql": "^14.5.8",
     "graphql-tools": "^4.0.5",
