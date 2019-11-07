@@ -1,6 +1,10 @@
 # compiled output
 /dist
 /node_modules
+/data
+
+# Ignore files related to API keys
+.env
 
 # Logs
 logs
