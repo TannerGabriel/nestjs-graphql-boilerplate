@@ -4,8 +4,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import 'dotenv/config';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_FILTER } from '@nestjs/core';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
 
 const host = process.env.DATABASE_HOST || 'localhost';
 @Module({
@@ -27,6 +28,10 @@ const host = process.env.DATABASE_HOST || 'localhost';
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
     },
   ],
 })
