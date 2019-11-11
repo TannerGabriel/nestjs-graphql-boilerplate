@@ -1,5 +1,8 @@
 # NestJS + GraphQL + MongoDB + PassportJS Boilerplate
 
+[![CircleCI](https://circleci.com/gh/TannerGabriel/nestjs-graphql-boilerplate.svg?style=svg)](https://circleci.com/gh/TannerGabriel/nestjs-graphql-boilerplate)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c7bbc891b4324dfab61a93c48dd8a9b3)](https://www.codacy.com/manual/TannerGabriel/nestjs-graphql-boilerplate?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TannerGabriel/nestjs-graphql-boilerplate&amp;utm_campaign=Badge_Grade)
+
 This is an ever-evolving starter kit for NestJS projects with GraphQL and MongoDB.
 
 ## Features
