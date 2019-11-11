@@ -104,7 +104,7 @@ npm run start
 
 ## Contribution
 
-Anyone is welcome to contribute to this repository, however, if you decide to do so I would appreciate it if you take a moment and review the [guidelines](.github/CONTRIBUTING.md).
+Anyone is welcome to contribute to this repository, however, if you decide to do so I would appreciate it if you take a moment and review the [guidelines](./.github/CONTRIBUTING.md).
 
 ## Author
 
