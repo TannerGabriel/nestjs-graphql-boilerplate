@@ -15,4 +15,4 @@ jobs:
     - name: Run the docker-compose file
       run: docker-compose up -d 
     - name: Run test suite
-      run: docker exec -it nodejs npm run test:e2e
+      run: docker-compose run nodejs npm run test:e2e
