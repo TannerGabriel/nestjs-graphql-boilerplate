@@ -1,0 +1,17 @@
+name: Docker Image CI
+
+on: [push]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build the Docker image
+      run: docker-compose build
+    - name: Run the docker-compose file and test suite
+      run: docker-compose up -d |
+        docker exec -it nodejs npm run test:e2e
