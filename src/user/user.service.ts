@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../types/user';
@@ -9,7 +9,7 @@ import { UserType } from '../models/user.type';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
+  constructor(@InjectModel('User') private readonly userModel: Model<UserType>) {}
 
   async showAll(): Promise<UserType[]> {
     return await this.userModel.find();
@@ -27,8 +27,8 @@ export class UserService {
     if (user) {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
-
     const createdUser = new this.userModel(userDTO);
+    Logger.log(userDTO)
     return await createdUser.save();
   }
 

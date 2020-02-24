@@ -3,6 +3,12 @@ scalar Email
 type User {
   id: ID!
   email: String!
+  userRoles: UserRoles
+}
+
+enum UserRoles {
+  NORMAL
+  ADMIN
 }
 
 input UserType {

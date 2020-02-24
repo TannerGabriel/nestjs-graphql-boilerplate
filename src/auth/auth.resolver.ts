@@ -4,6 +4,7 @@ import { User } from '../types/user';
 import { UserService } from '../user/user.service';
 import { Payload } from '../types/payload';
 import { AuthType } from '../models/auth.type';
+import { UserRoles } from '../shared/user-roles';
 
 @Resolver('Auth')
 export class AuthResolver {
@@ -17,7 +18,7 @@ export class AuthResolver {
     @Args('email') email: string,
     @Args('password') password: string,
   ) {
-    const user: User = { email, password };
+    const user: User = { email, password, userRole: UserRoles.NORMAL };
     const response: User = await this.userService.create(user);
     const payload: Payload = {
       email: response.email,
