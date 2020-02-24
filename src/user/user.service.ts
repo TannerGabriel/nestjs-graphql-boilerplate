@@ -11,7 +11,8 @@ import { UserType } from '../models/user.type';
 export class UserService {
   constructor(@InjectModel('User') private readonly userModel: Model<UserType>) {}
 
-  async showAll(): Promise<UserType[]> {
+  async showAll(): Promise<User[]> {
+    Logger.log(await this.userModel.find())
     return await this.userModel.find();
   }
 
@@ -28,7 +29,6 @@ export class UserService {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
     const createdUser = new this.userModel(userDTO);
-    Logger.log(userDTO)
     return await createdUser.save();
   }
 

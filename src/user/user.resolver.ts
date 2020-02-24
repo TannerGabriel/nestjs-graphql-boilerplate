@@ -1,13 +1,17 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { UpdateUserInput } from './dto/update-user.input';
-import { UseGuards, UnauthorizedException } from '@nestjs/common';
+import { UseGuards, UnauthorizedException, SetMetadata } from '@nestjs/common';
 import { GraphqlAuthGuard } from '../guards/gql-auth.guard';
 import { CurrentUser } from '../decorators/user.decorator';
 import { User } from '../types/user';
 import { UserType } from '../models/user.type';
+import { RolesGuard } from '../guards/roles.guard';
+
 
 @UseGuards(GraphqlAuthGuard)
+@UseGuards(RolesGuard)
+@SetMetadata('roles', ['admin'])
 @Resolver()
 export class UserResolver {
   constructor(private userService: UserService) {}
