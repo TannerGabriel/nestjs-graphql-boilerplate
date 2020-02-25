@@ -1,18 +1,33 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { ExecutionContext, Injectable } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { GqlExecutionContext } from '@nestjs/graphql';
+import { AuthenticationError } from 'apollo-server-core';
 import { Reflector } from '@nestjs/core';
-import { User } from '../types/user';
 
 @Injectable()
-export class RolesGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector) {}
+export class RolesGuard extends AuthGuard('jwt') {
+  constructor(private readonly reflector: Reflector) {
+    super()
+  }
 
-  canActivate(context: ExecutionContext): boolean {
-    const roles = this.reflector.get<string[]>('roles', context.getHandler());
-    if (!roles) {
+  roles = []
+
+  getRequest(context: ExecutionContext) {
+    const ctx = GqlExecutionContext.create(context);
+    const request = ctx.getContext().req
+    this.roles = this.reflector.get<string[]>('roles', context.getHandler());
+    return request;
+  }
+
+  handleRequest(err: any, user: any, info: any) {
+    if (!this.roles) {
       return true;
     }
-    const request = context.switchToHttp().getRequest();
-    const user: User = request.user;
-    return roles.includes(user.userRole);
+
+    if (err || !user || !this.roles.includes(user.userRole)) {
+      throw err || new AuthenticationError('Could not authenticate with token');
+    }
+
+    return user;
   }
 }

@@ -12,7 +12,6 @@ export class UserService {
   constructor(@InjectModel('User') private readonly userModel: Model<UserType>) {}
 
   async showAll(): Promise<User[]> {
-    Logger.log(await this.userModel.find())
     return await this.userModel.find();
   }
 

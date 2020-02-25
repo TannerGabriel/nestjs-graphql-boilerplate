@@ -7,15 +7,17 @@ import { CurrentUser } from '../decorators/user.decorator';
 import { User } from '../types/user';
 import { UserType } from '../models/user.type';
 import { RolesGuard } from '../guards/roles.guard';
+import { UserRoles } from '../shared/user-roles';
+import { Roles } from '../decorators/roles.decorator';
 
 
 @UseGuards(GraphqlAuthGuard)
 @UseGuards(RolesGuard)
-@SetMetadata('roles', ['admin'])
 @Resolver()
 export class UserResolver {
   constructor(private userService: UserService) {}
 
+  @Roles("Admin")
   @Query(returns => [UserType])
   async users() {
     return await this.userService.showAll();
