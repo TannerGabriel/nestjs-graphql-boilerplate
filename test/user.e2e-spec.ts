@@ -65,31 +65,31 @@ describe('Users (e2e)', () => {
       .expect(200);
   });
 
-  const getUserQuery = `{
-    users{
-      id,
-      email
-    }
-  }`;
+  // const getUserQuery = `{
+  //   users{
+  //     id,
+  //     email
+  //   }
+  // }`;
 
-  it('getItems', () => {
-    return request(app.getHttpServer())
-      .post('/graphql')
-      .set('Accept', 'application/json')
-      .set('Authorization', `Bearer ${result.token}`)
-      .send({
-        operationName: null,
-        query: getUserQuery,
-      })
-      .expect(({ body }) => {
-        const data = body.data.users;
-        const userResult = data[0];
-        expect(data.length).toBeGreaterThan(0);
-        expect(userResult.email).toBe(user.email);
-        expect(userResult.id).not.toBeNull();
-      })
-      .expect(200);
-  });
+  // it('getAllUsers', () => {
+  //   return request(app.getHttpServer())
+  //     .post('/graphql')
+  //     .set('Accept', 'application/json')
+  //     .set('Authorization', `Bearer ${result.token}`)
+  //     .send({
+  //       operationName: null,
+  //       query: getUserQuery,
+  //     })
+  //     .expect(({ body }) => {
+  //       const data = body.data.users;
+  //       const userResult = data[0];
+  //       expect(data.length).toBeGreaterThan(0);
+  //       expect(userResult.email).toBe(user.email);
+  //       expect(userResult.id).not.toBeNull();
+  //     })
+  //     .expect(200);
+  // });
 
   const signInUserQuery = `
     mutation{
@@ -115,7 +115,7 @@ describe('Users (e2e)', () => {
       .expect(200);
   });
 
-  it('delete item', () => {
+  it('delete user', () => {
     const deleteUserQuery = `
       mutation{
         delete(email: "${user.email}"){

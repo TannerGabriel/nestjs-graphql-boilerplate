@@ -7,9 +7,7 @@ import { CurrentUser } from '../decorators/user.decorator';
 import { User } from '../types/user';
 import { UserType } from '../models/user.type';
 import { RolesGuard } from '../guards/roles.guard';
-import { UserRoles } from '../shared/user-roles';
 import { Roles } from '../decorators/roles.decorator';
-
 
 @UseGuards(GraphqlAuthGuard)
 @UseGuards(RolesGuard)
