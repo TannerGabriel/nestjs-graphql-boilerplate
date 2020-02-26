@@ -3,18 +3,20 @@ import { AuthGuard } from '@nestjs/passport';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthenticationError } from 'apollo-server-core';
 import { Reflector } from '@nestjs/core';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class RolesGuard extends AuthGuard('jwt') {
   constructor(private readonly reflector: Reflector) {
-    super()
+    super();
   }
 
-  roles = []
+  roles = [];
+  user
 
   getRequest(context: ExecutionContext) {
     const ctx = GqlExecutionContext.create(context);
-    const request = ctx.getContext().req
+    const request = ctx.getContext().req;
     this.roles = this.reflector.get<string[]>('roles', context.getHandler());
     return request;
   }
@@ -25,9 +27,10 @@ export class RolesGuard extends AuthGuard('jwt') {
     }
 
     if (err || !user || !this.roles.includes(user.userRole)) {
-      throw err || new AuthenticationError('Could not authenticate with token');
+      throw err ||
+        new AuthenticationError('Wrong permissions for this request');
     }
-
+    this.user = user
     return user;
   }
 }

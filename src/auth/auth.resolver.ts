@@ -19,14 +19,18 @@ export class AuthResolver {
     @Args('password') password: string,
   ) {
     const user: User = { email, password, userRole: UserRoles.NORMAL };
-    const response: User = await this.userService.create(user);
-    const payload: Payload = {
-      email: response.email,
-      role: response.userRole
-    };
-
-    const token = await this.authService.signPayload(payload);
-    return { email: response.email, token };
+    try {
+      const response: User = await this.userService.create(user);
+      const payload: Payload = {
+        email: response.email,
+        role: response.userRole
+      };
+  
+      const token = await this.authService.signPayload(payload);
+      return { email: response.email, token };
+    } catch(exception) {
+      throw exception
+    }
   }
 
   @Mutation(returns => AuthType)
