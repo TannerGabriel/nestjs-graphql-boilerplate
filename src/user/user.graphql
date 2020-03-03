@@ -30,7 +30,6 @@ type Auth {
 type Query {
   users: [User!]
   user(email: Email!): User
-  whoami: User
 }
 
 type Mutation {

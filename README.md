@@ -11,7 +11,7 @@ This is an ever-evolving starter kit for NestJS projects with GraphQL and MongoD
 - [NestJS](https://nestjs.com/) server
 - [MongoDB](https://www.mongodb.com/)
 - [Apollo](https://www.apollographql.com/)
-- [JWT](https://jwt.io/) Authentication using Passport.js
+- [JWT](https://jwt.io/) Rolebased Authentication using Passport.js
 - Authorization
 - User Management
 - E2E testing
@@ -100,6 +100,22 @@ npm run build
 
 ```bash
 npm run start
+```
+
+## Available Mutations
+
+```bash
+login(email: Email!, password: String!): Auth
+register(email: Email!, password: String!): Auth
+update(id: String!, user: UpdateUser!): User
+delete(email: Email!): User
+```
+
+## Available Queries
+
+```bash
+users: [User!]
+user(email: Email!): User
 ```
 
 ## Contribution
