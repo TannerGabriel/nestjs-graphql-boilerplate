@@ -19,6 +19,7 @@ input UserType {
 input UpdateUser {
   email: String
   password: String
+  userRole: String
 }
 
 type Auth {

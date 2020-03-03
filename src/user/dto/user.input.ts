@@ -10,4 +10,8 @@ export class CreateUserInput {
   @IsString()
   @IsNotEmpty()
   password: string;
+  @Field({ nullable: true })
+  @IsString()
+  @IsNotEmpty()
+  userRole?: string;
 }

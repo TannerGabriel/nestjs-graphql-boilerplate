@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, Logger, ForbiddenException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../types/user';
@@ -6,6 +6,7 @@ import { CreateUserInput } from './dto/user.input';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserInput } from './dto/update-user.input';
 import { UserType } from '../models/user.type';
+import { UserRoles } from '../shared/user-roles';
 
 @Injectable()
 export class UserService {
@@ -45,7 +46,7 @@ export class UserService {
     }
   }
 
-  async update(id: string, newUser: UpdateUserInput) {
+  async update(id: string, newUser: UpdateUserInput, role: UserRoles) {
     const user: User = await this.userModel.findOne({ _id: id });
     const userWithEmail = await this.userModel.findOne({
       email: newUser.email,
@@ -61,9 +62,18 @@ export class UserService {
       throw new HttpException('Email is already used', HttpStatus.BAD_REQUEST);
     }
 
+    if(role == UserRoles.NORMAL && newUser.userRole != user.userRole) {
+      throw new ForbiddenException("Normal users can't change roles")
+    } 
+    
+    let userRole: UserRoles
+    if(role === UserRoles.ADMIN) userRole=newUser.userRole
+    else userRole = user.userRole
+
     const updateUser: CreateUserInput = {
       email: newUser.email || user.email,
       password: newUser.password || user.password,
+      userRole: userRole
     };
 
     const updatedUser = await this.userModel.findOneAndUpdate(
