@@ -3,6 +3,12 @@ scalar Email
 type User {
   id: ID!
   email: String!
+  userRole: String!
+}
+
+enum UserRole {
+  Normal
+  Admin
 }
 
 input UserType {
@@ -13,6 +19,7 @@ input UserType {
 input UpdateUser {
   email: String
   password: String
+  userRole: String
 }
 
 type Auth {
@@ -23,7 +30,6 @@ type Auth {
 type Query {
   users: [User!]
   user(email: Email!): User
-  whoami: User
 }
 
 type Mutation {

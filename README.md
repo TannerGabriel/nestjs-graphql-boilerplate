@@ -5,13 +5,22 @@
 
 This is an ever-evolving starter kit for NestJS projects with GraphQL and MongoDB.
 
+* [Features](#Features)
+* [Requirements](#Requirements)
+* [Available Mutations](#Available-Mutations)
+* [Available Queries](#Available-Queries)
+* [Securing a specific route](#Securing-a-specific-route)
+* [Getting started](#Getting-started)
+* [Important commands](#Important-commands)
+* [Contribution](#Contribution)
+
 ## Features
 
 - [GraphQL](https://graphql.org/)
 - [NestJS](https://nestjs.com/) server
 - [MongoDB](https://www.mongodb.com/)
 - [Apollo](https://www.apollographql.com/)
-- [JWT](https://jwt.io/) Authentication using Passport.js
+- [JWT](https://jwt.io/) Rolebased Authentication using Passport.js
 - Authorization
 - User Management
 - E2E testing
@@ -23,6 +32,53 @@ This is an ever-evolving starter kit for NestJS projects with GraphQL and MongoD
 - [NPM](https://www.npmjs.com/)
 - [MongoDB](https://www.mongodb.com/)
 - [Docker](https://www.docker.com/) (optional)
+
+## Available Mutations
+
+```bash
+login(email: Email!, password: String!): Auth
+register(email: Email!, password: String!): Auth
+update(id: String!, user: UpdateUser!): User
+delete(email: Email!): User
+```
+
+## Available Queries
+
+```bash
+users: [User!]
+user(email: Email!): User
+```
+
+## Securing a specific route
+
+You can secure a route using two predefined guards that can check for the authentification state or the user role.
+
+Only for authenticated users:
+
+```javascript
+@UseGuards(GraphqlAuthGuard)
+@Resolver()
+export class UserResolver {
+
+}
+```
+
+Only for users with specific roles:
+
+```javascript
+@UseGuards(RolesGuard)
+@Resolver()
+export class UserResolver {
+    // only Admins can access this function
+    @Roles("Admin")
+    @Query(returns => [UserType])
+    async users() {
+        return await this.userService.showAll();
+    }
+}
+```
+
+The current version provides no option to create the first admin account automatically and instead is made for creating the first admin manually (Which will be the case for most applications). After creating the first admin you can change the roles by using the update mutation.
 
 ## Getting started
 
@@ -67,7 +123,7 @@ Visit http://localhost:3000/graphql for the GraphQL playground
 
 ### Starting using Docker
 
-The application also includes a Docker Compose file which makes it easier to get your application running.
+The application also includes a Docker Compose file, which makes it easier to get your application running.
 
 ```bash
 # Build the image for the application
@@ -104,7 +160,7 @@ npm run start
 
 ## Contribution
 
-Anyone is welcome to contribute to this repository, however, if you decide to do so I would appreciate it if you take a moment and review the [guidelines](./.github/CONTRIBUTING.md).
+Anyone is welcome to contribute to this repository. However, if you decide to do so, I would appreciate it if you take a moment and review the [guidelines](./.github/CONTRIBUTING.md).
 
 ## Author
 

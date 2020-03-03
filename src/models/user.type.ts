@@ -1,5 +1,6 @@
-import { IsString, IsEmail, IsNotEmpty } from 'class-validator';
+import { IsString, IsEmail, IsNotEmpty, IsOptional } from 'class-validator';
 import { Field, ObjectType } from 'type-graphql';
+import { UserRoles } from '../shared/user-roles';
 
 @ObjectType()
 export class UserType {
@@ -10,4 +11,7 @@ export class UserType {
   @IsString()
   @IsNotEmpty()
   password: string;
+  @Field()
+  @IsOptional()
+  userRole: UserRoles;
 }

@@ -9,7 +9,7 @@ const EMAIL_ADDRESS_REGEX = new RegExp(
 
 @Scalar('Email')
 export class EmailScalar implements CustomScalar<string, string> {
-  description = 'Date custom scalar type';
+  description = 'Email custom scalar type';
 
   parseValue(value: string): string {
     if (typeof value !== 'string') {
