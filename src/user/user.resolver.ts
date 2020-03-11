@@ -16,7 +16,7 @@ import { UserRoles } from '../shared/user-roles';
 export class UserResolver {
   constructor(private userService: UserService) {}
 
-  @Roles("Admin")
+  // @Roles("Admin")
   @Query(returns => [UserType])
   async users() {
     return await this.userService.showAll();

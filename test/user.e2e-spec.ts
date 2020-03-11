@@ -65,31 +65,32 @@ describe('Users (e2e)', () => {
       .expect(200);
   });
 
-  // const getUserQuery = `{
-  //   users{
-  //     id,
-  //     email
-  //   }
-  // }`;
+  const getUserQuery = `{
+    users{
+      id,
+      email
+    }
+  }`;
 
-  // it('getAllUsers', () => {
-  //   return request(app.getHttpServer())
-  //     .post('/graphql')
-  //     .set('Accept', 'application/json')
-  //     .set('Authorization', `Bearer ${result.token}`)
-  //     .send({
-  //       operationName: null,
-  //       query: getUserQuery,
-  //     })
-  //     .expect(({ body }) => {
-  //       const data = body.data.users;
-  //       const userResult = data[0];
-  //       expect(data.length).toBeGreaterThan(0);
-  //       expect(userResult.email).toBe(user.email);
-  //       expect(userResult.id).not.toBeNull();
-  //     })
-  //     .expect(200);
-  // });
+  it('getAllUsers', () => {
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .set('Accept', 'application/json')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        operationName: null,
+        query: getUserQuery,
+      })
+      .expect(({ body }) => {
+        const data = body.data.users;
+        const userResult = data[0];
+        result.id = userResult.id;
+        expect(data.length).toBeGreaterThan(0);
+        expect(userResult.email).toBe(user.email);
+        expect(userResult.id).not.toBeNull();
+      })
+      .expect(200);
+  });
 
   const signInUserQuery = `
     mutation{
@@ -109,6 +110,61 @@ describe('Users (e2e)', () => {
       })
       .expect(({ body }) => {
         const data = body.data.login;
+        token = data.token;
+        expect(data.email).toBe(user.email);
+        expect(data.token).not.toBeNull();
+      })
+      .expect(200);
+  });
+
+  it('update user', () => {
+    console.log(result.id);
+    const updateUserQuery = `
+      mutation{
+        update(id: "${result.id}", user: {email:"test1@test.com"}){
+          id,
+          email,
+          userRole,
+        }
+      }
+  `;
+
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .set('Accept', 'application/json')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        operationName: null,
+        query: updateUserQuery,
+      })
+      .expect(({ body }) => {
+        const data = body.data.update;
+        user.email = data.email
+        expect(data.email).toBe("test1@test.com");
+      })
+      .expect(200);
+  });
+
+  
+  it('signIn', () => {
+    const signInUpdatedUserQuery = `
+    mutation{
+      login(email: "${user.email}", password: "${user.password}"){
+          email,
+          token
+        }
+      }
+  `;
+
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        query: signInUpdatedUserQuery,
+      })
+      .expect(({ body }) => {
+        const data = body.data.login;
+        token = data.token;
         expect(data.email).toBe(user.email);
         expect(data.token).not.toBeNull();
       })
@@ -128,7 +184,7 @@ describe('Users (e2e)', () => {
     return request(app.getHttpServer())
       .post('/graphql')
       .set('Accept', 'application/json')
-      .set('Authorization', `Bearer ${result.token}`)
+      .set('Authorization', `Bearer ${token}`)
       .send({
         operationName: null,
         query: deleteUserQuery,
