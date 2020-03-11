@@ -15,7 +15,9 @@ import { UserRoles } from '../shared/user-roles';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('User') private readonly userModel: Model<UserType>) {}
+  constructor(
+    @InjectModel('User') private readonly userModel: Model<UserType>,
+  ) {}
 
   async showAll(): Promise<User[]> {
     return await this.userModel.find();
@@ -67,18 +69,24 @@ export class UserService {
       throw new HttpException('Email is already used', HttpStatus.BAD_REQUEST);
     }
 
-    if(role == UserRoles.NORMAL && newUser.userRole != user.userRole) {
-      throw new ForbiddenException("Normal users can't change roles")
-    } 
-    
-    let userRole: UserRoles
-    if(role === UserRoles.ADMIN) userRole=newUser.userRole
-    else userRole = user.userRole
+    if (
+      role == UserRoles.NORMAL &&
+      newUser.userRole != user.userRole &&
+      newUser.userRole != null &&
+      newUser.userRole != undefined
+    ) {
+      throw new ForbiddenException("Normal users can't change roles");
+    }
+
+    let userRole: UserRoles;
+    if (role === UserRoles.ADMIN) userRole = newUser.userRole;
+    else if (role === undefined || role === null) user.userRole;
+    else userRole = user.userRole;
 
     const updateUser: CreateUserInput = {
       email: newUser.email || user.email,
       password: newUser.password || user.password,
-      userRole: userRole
+      userRole: userRole,
     };
 
     const updatedUser = await this.userModel.findOneAndUpdate(
