@@ -32,7 +32,7 @@
 		"class-validator": "0.11.0",
 		"compression": "1.7.4",
 		"dotenv": "8.2.0",
-		"graphql": "14.5.8",
+		"graphql": "14.7.0",
 		"graphql-tools": "4.0.6",
 		"helmet": "3.21.3",
 		"jsonwebtoken": "8.5.1",
