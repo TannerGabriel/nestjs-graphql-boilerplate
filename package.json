@@ -36,7 +36,7 @@
 		"graphql-tools": "4.0.6",
 		"helmet": "3.21.3",
 		"jsonwebtoken": "8.5.1",
-		"mongoose": "5.7.13",
+		"mongoose": "5.11.11",
 		"passport": "0.4.0",
 		"passport-jwt": "4.0.0",
 		"passport-local": "1.0.0",
